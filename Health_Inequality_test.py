@@ -9,8 +9,20 @@ API_HEADERS = {
 }
 
 # Streamlit App
-st.set_page_config(page_title="Diabetes Chatbot", page_icon="💬")
-st.title("💬 Diabetes Sales & Reps Chatbot")
+st.set_page_config(page_title="KSA Commercial Excellence", page_icon="💬", layout="wide")
+
+# --- Custom Header ---
+st.markdown(
+    """
+    <div style="text-align: center;">
+        <img src="https://allot.123-web.uk/wp-content/uploads/2018/12/logo-2.png" width="150">
+    </div>
+    <h1 style="text-align: left; font-size: 2.2rem; margin-top: 0.5rem;">
+        💬 KSA Commercial Excellence
+    </h1>
+    """,
+    unsafe_allow_html=True
+)
 
 # Initialize session state for chat history
 if "messages" not in st.session_state:
@@ -20,12 +32,12 @@ if "messages" not in st.session_state:
 with st.sidebar:
     st.subheader("Instructions")
     st.write("""
-    This chatbot connects to a healthcare sales & reps API.
-    
+    This chatbot connects to a healthcare commercial excellence API.
+
     Example prompt:
     - `King Abdulaziz Medical City (Riyadh - NGHA)`
     
-    Select the role you want before sending your question.
+    Select the role you want before sending your enquiry.
     """)
 
 # Function to query API
@@ -50,11 +62,10 @@ for msg in st.session_state.messages:
     else:
         st.markdown(f"**🤖 Bot:** {msg['content']}")
 
-# User input
+# User input form
 with st.form("chat_form", clear_on_submit=True):
-    user_input = st.text_input("Ask me about a hospital or sales data:", "")
+    user_input = st.text_input("KSA commercial excellence enquire:", "")
 
-    # Let user pick which question_type
     question_type = st.radio(
         "Select role:",
         [
@@ -69,14 +80,7 @@ with st.form("chat_form", clear_on_submit=True):
     submitted = st.form_submit_button("Send")
 
     if submitted and user_input:
-        # Add user message
         st.session_state.messages.append({"role": "user", "content": f"[{question_type}] {user_input}"})
-        
-        # Query API
         bot_response = query_api(question_type, user_input)
-        
-        # Add bot response
         st.session_state.messages.append({"role": "bot", "content": f"**{question_type}:** {bot_response}"})
-        
-        # Rerun to show updated history
         st.rerun()
